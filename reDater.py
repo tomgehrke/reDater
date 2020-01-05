@@ -9,6 +9,8 @@ import platform
 import pywintypes
 import win32file
 import win32con
+from dateutil.parser import parser
+
 
 showDetails = False
 bestDateTag = 'Image DateTimeOriginal'
@@ -45,8 +47,8 @@ def getBestEXIFDate(filePath):
 
     for dateTag in dateTags:
         if dateTag in tags and tags[dateTag] != '':
+            print("    Best date from {label}".format(label=dateTag))
             bestEXIFDate = tags[dateTag]
-            print("    Best data from {label}".format(label=dateTag))
             break
 
     return bestEXIFDate
@@ -72,8 +74,12 @@ def getBestTimestamp(filePath):
     bestDate = str(getBestEXIFDate(filePath))
     print('    Best Date: {bestDate}'.format(bestDate=bestDate))
     if bestDate != '':
-        bestTimestamp = datetime.strptime(
-            bestDate[0:19], '%Y:%m:%d %H:%M:%S').timestamp()
+        try:
+            bestTimestamp = datetime.strptime(
+                bestDate[0:19], '%Y:%m:%d %H:%M:%S').timestamp()
+        except:
+            print("[ERROR] Unable to convert from '{date}'".format(
+                date=bestTimestamp))
     else:
         createdTimestamp = getCreatedTimestamp(filePath)
         modifiedTimestamp = getModifiedTimestamp(filePath)
@@ -113,7 +119,8 @@ def main(args):
             currentFile = os.path.join(root, filename)
             print('Processing: ' + currentFile)
             bestTimeStamp = getBestTimestamp(currentFile)
-            setCreationDate(currentFile, bestTimeStamp)
+            if bestTimeStamp != None:
+                setCreationDate(currentFile, bestTimeStamp)
     return 0
 
 
