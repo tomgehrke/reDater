@@ -9,7 +9,6 @@ import platform
 import pywintypes
 import win32file
 import win32con
-from dateutil.parser import parser
 
 
 showDetails = False
