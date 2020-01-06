@@ -46,3 +46,4 @@ This script requires the following modules to be installed:
 Please take note of the following!
 
 - The script will recursively process every folder and file. I have not filtered out image files as the folders I needed to process contained _only_ image files.
+- Sometimes EXIF dates will be stored in a way that the script is unprepared to handle. These will get skipped.
